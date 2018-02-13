@@ -1,0 +1,48 @@
+#!/bin/bash
+# The run script executes the server that runs your application.
+#
+# For more information see the documentation:
+#	https://github.com/openshift/source-to-image/blob/master/docs/builder_image.md
+#
+#TODO only missing models
+function isFedoraUp {
+count=0
+while [ ${count} -lt 64 ]
+echo "Wait for ${fedoraHost}"
+do
+  if curl --head --silent --fail --location --max-time 2 ${fedoraHost} > /dev/null; then
+    echo -n "Fedora is running..."
+    return 0
+  fi
+  sleep 1
+  let count=${count}+1
+done
+return 1
+}
+
+function ingest2fedora {
+  curl -vv -u "$fedoraUser:$fedoraPass" -H "Content-type:text/xml" -d "format=info:fedora/fedora-system:FOXML-1.1" -X POST --upload-file $1 $fedoraHost/objects/new
+}
+
+
+#if isFedoraUp; then
+#  MODELS=/tmp/fedora/*.xml
+#  for MODEL in $MODELS
+#  do
+#      ingest2fedora $MODEL
+#  done
+#else 
+#  echo -n "model not ingested"
+#fi
+
+if [ -n "$kramerius_connectionURL" ] && [ -n "$kramerius_connectionUser" ] && [ -n "$kramerius_connectionPass" ] ; then
+  sed -i -e "s|\${kramerius_connectionURL}|$kramerius_connectionURL|; s|\${kramerius_connectionUser}|$kramerius_connectionUser|; s|\${kramerius_connectionPass}|$kramerius_connectionPass|;" \
+     "$CATALINA_HOME/conf/Catalina/localhost/search.xml";
+  echo -n "connection to postgres updated"
+fi
+
+cp $CATALINA_HOME/conf/Catalina/localhost/search.xml $CATALINA_HOME/conf/Catalina/localhost/rightseditor.xml
+
+sh /tmp/robotScript.sh
+
+exec $CATALINA_HOME/bin/catalina.sh run

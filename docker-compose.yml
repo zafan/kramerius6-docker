@@ -1,0 +1,109 @@
+version: '2'
+
+services:
+  solr:
+    image: solr:7.2.0-alpine
+    environment:
+      - "TZ=Europe/Prague"
+      - VIRTUAL_HOST=test2.mzk.cz
+    volumes:
+      - /home/secikd/Kramerius6-docker/solr/kramerius:/kramerius
+      - /home/secikd/Kramerius6-docker/solr/processing:/processing
+      - /home/secikd/Kramerius6-docker/solr/precreate-kramerius.sh:/docker-entrypoint-initdb.d/precreate-kramerius.sh
+    ports:
+      - 8983:8983
+    networks:
+      default:
+        aliases:
+          - krameriusSolr
+    logging:
+      driver: json-file
+      options:
+        max-size: "100m"
+        max-file: "1"
+    restart:
+      always
+
+  fedora:
+    build: ./fcrepo
+    image: moravianlibrary/fcrepo:4
+    environment:
+      - "TZ=Europe/Prague"
+    ports:
+      - 8080:8080
+    networks:
+      default:
+        aliases:
+          - krameriusFedora
+    logging:
+      driver: json-file
+      options:
+        max-size: "100m"
+        max-file: "1"
+    restart:
+      always
+
+  kramerius:
+    image: moravianlibrary/kramerius:6
+    environment:
+      - "TZ=Europe/Prague"
+#      - "VIRTUAL_HOST=krameriusbatch.mzk.cz"
+      - fedoraHost=http://krameriusFedora:8080/fcrepo
+      - fedoraUser=fedoraAdmin
+      - fedoraPass=fedoraAdmin
+#      - fedora3_connectionURL=jdbc:postgresql://FAKE.infra.mzk.cz:5432/fedora3
+#      - fedora3_connectionUser=fedoraadmin
+#      - fedora3_connectionPass=2aFRiUxGXBE0SdH
+      - kramerius_connectionURL=jdbc:postgresql://krameriusPostgres:5432/kramerius4
+      - kramerius_connectionUser=fedoraAdmin
+      - kramerius_connectionPass=fedoraAdmin
+#      - driver_fedora_mpt_jdbc_url=jdbc:postgresql://dk-db.infra.mzk.cz:5432/ritriples
+#      - driver_fedora_mpt_jdbc_user=fedoraadmin
+#      - driver_fedora_mpt_jdbc_password=2aFRiUxGXBE0SdH
+      - solrHost=http://krameriusSolr:8983/solr/kramerius
+      - processingSolrHost=http://krameriusSolr:8983/solr/processing
+      - _fedoraTomcatHost=http://krameriusFedora:8080
+      - applicationUrl=http://localhost:8080/search
+      - turnOffPdfCheck=true
+      - processQueue_activeProcess=2
+      - search.home.tabs=custom,newest,facets,browseTitle,browseAuthor,collections,favorites,info
+      - CATALINA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=7423"
+      - fedora.topLevelModels=monograph,periodical,soundrecording,manuscript,map,sheetmusic,graphic
+      - fedora4Host=http://krameriusFedora:8080
+    ports:
+      - 9090:8080
+    logging:
+      driver: json-file
+      options:
+        max-size: "100m"
+        max-file: "1"
+    restart:
+      always
+
+  krameriusPostgres:
+    image: postgres:9.6
+#    volumes:
+#      - /data/kramerius.infra.mzk.cz/krameriusPostgres:/var/lib/postgresql/data
+    environment:
+      - "TZ=Europe/Prague"
+      - POSTGRES_USER=fedoraAdmin
+      - POSTGRES_PASSWORD=fedoraAdmin
+      - POSTGRES_DB=kramerius4
+    networks:
+      default:
+        aliases:
+          - krameriusPostgres
+    logging:
+      driver: json-file
+      options:
+        max-size: "100m"
+        max-file: "1"
+    restart:
+      always
+
+
+networks:
+  default:
+    external:
+      name: ud_bridge
+
