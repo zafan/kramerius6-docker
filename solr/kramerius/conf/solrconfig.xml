@@ -310,6 +310,7 @@
          have some sort of hard autoCommit to limit the log size.
       -->
     <autoCommit>
+      <maxDocs>${solr.autoCommit.maxDocs:20000}</maxDocs>
       <maxTime>${solr.autoCommit.maxTime:-1}</maxTime>
       <openSearcher>false</openSearcher>
     </autoCommit>
@@ -321,7 +322,7 @@
       -->
 
     <autoSoftCommit>
-      <maxTime>${solr.autoSoftCommit.maxTime:-1}</maxTime>
+      <maxTime>${solr.autoSoftCommit.maxTime:30000}</maxTime>
     </autoSoftCommit>
 
     <!-- Update Related Event Listeners
@@ -756,6 +757,9 @@
       <str name="echoParams">explicit</str>
       <int name="rows">10</int>
       <!-- <str name="df">text</str> -->
+
+      <str name="q.op">AND</str>
+
     </lst>
     <!-- In addition to defaults, "appends" params can be specified
          to identify values which should be appended to the list of
