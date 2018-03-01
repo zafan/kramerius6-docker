@@ -42,8 +42,6 @@ RUN  curl -fSL "$TOMCAT_TGZ_URL" -o tomcat.tar.gz && \
 	rm bin/*.bat && \
 	rm tomcat.tar.gz*
 
-RUN echo "tomcat.util.http.parser.HttpParser.requestTargetAllow = {}[]" >> $CATALINA_HOME/conf/catalina.properties
-
 RUN curl -fsL "$JDBC_DRIVER_DOWNLOAD_URL" -o $CATALINA_HOME/lib/postgresql-9.4.1208.jar
 
 RUN curl -fsL  https://github.com/ceskaexpedice/kramerius/releases/download/v5.3.6/kramerius-5.3.6.zip -o /tmp/kramerius-5.3.6.zip && \

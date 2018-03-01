@@ -7,9 +7,9 @@ services:
       - "TZ=Europe/Prague"
       - VIRTUAL_HOST=test2.mzk.cz
     volumes:
-      - /home/secikd/Kramerius6-docker/solr/kramerius:/kramerius
-      - /home/secikd/Kramerius6-docker/solr/processing:/processing
-      - /home/secikd/Kramerius6-docker/solr/precreate-kramerius.sh:/docker-entrypoint-initdb.d/precreate-kramerius.sh
+      - /home/secikd/kramerius6-docker/solr/kramerius:/kramerius
+      - /home/secikd/kramerius6-docker/solr/processing:/processing
+      - /home/secikd/kramerius6-docker/solr/precreate-kramerius.sh:/docker-entrypoint-initdb.d/precreate-kramerius.sh
     ports:
       - 8983:8983
     networks:
@@ -63,15 +63,22 @@ services:
       - solrHost=http://krameriusSolr:8983/solr/kramerius
       - processingSolrHost=http://krameriusSolr:8983/solr/processing
       - _fedoraTomcatHost=http://krameriusFedora:8080
-      - applicationUrl=http://localhost:8080/search
+#      - applicationUrl=http://localhost:8080/search
+      - applicationUrl=http://kramerius6:8080/search
       - turnOffPdfCheck=true
       - processQueue_activeProcess=2
       - search.home.tabs=custom,newest,facets,browseTitle,browseAuthor,collections,favorites,info
       - CATALINA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=7423"
       - fedora.topLevelModels=monograph,periodical,soundrecording,manuscript,map,sheetmusic,graphic
-      - fedora4Host=http://krameriusFedora:8080
+      - fedora4Host=http://krameriusFedora:8080/fedora
+    volumes:
+      - /home/secikd/kramerius6-docker/foxml:/opt/app-root/src/.kramerius4/foxml
     ports:
       - 9090:8080
+    networks:
+      default:
+        aliases:
+          - kramerius6
     logging:
       driver: json-file
       options:
