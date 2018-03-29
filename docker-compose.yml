@@ -6,9 +6,9 @@ services:
       - TZ=Europe/Prague
       - VIRTUAL_HOST=test2.mzk.cz
     volumes:
-      - '/docker-compose/docker/kramerius6-docker/solr/kramerius:/kramerius'
-      - '/docker-compose/docker/kramerius6-docker/solr/processing:/processing'
-      - '/docker-compose/docker/kramerius6-docker/solr/precreate-kramerius.sh:/docker-entrypoint-initdb.d/precreate-kramerius.sh'
+      - '/docker-compose/kramerius6-docker/solr/kramerius:/kramerius'
+      - '/docker-compose/kramerius6-docker/solr/processing:/processing'
+      - '/docker-compose/kramerius6-docker/solr/precreate-kramerius.sh:/docker-entrypoint-initdb.d/precreate-kramerius.sh'
     ports:
       - 8983:8983
     networks:
@@ -23,7 +23,7 @@ services:
     restart: always
   fedora:
     build: ./fcrepo
-    image: moravianlibrary/fcrepo:4
+    image: moravianlibrary/fcrepo:4.7.5
     environment:
       - TZ=Europe/Prague
     ports:
@@ -59,7 +59,7 @@ services:
       - 'fedora.topLevelModels=monograph,periodical,soundrecording,manuscript,map,sheetmusic,graphic'
       - 'fedora4Host=http://krameriusFedora:8080/fedora'
     volumes:
-      - '/docker-compose/docker/kramerius6-docker/kram6:/opt/app-root/src/.kramerius4'
+      - '/docker-compose/kramerius6-docker/kram6:/opt/app-root/src/.kramerius4'
     ports:
       - '9090:8080'
     networks:
