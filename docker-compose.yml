@@ -23,7 +23,7 @@ services:
     restart: always
   fedora:
     build: ./fcrepo
-    image: moravianlibrary/fcrepo:4.7.5
+    image: moravianlibrary/fcrepo:4.7.5-standalone
     environment:
       - TZ=Europe/Prague
     ports:
@@ -57,7 +57,8 @@ services:
       - 'search.home.tabs=custom,newest,facets,browseTitle,browseAuthor,collections,favorites,info'
       - 'CATALINA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=7423"'
       - 'fedora.topLevelModels=monograph,periodical,soundrecording,manuscript,map,sheetmusic,graphic'
-      - 'fedora4Host=http://krameriusFedora:8080/fedora'
+#      - 'fedora4Host=http://krameriusFedora:8080/fedora'
+      - 'fedora4Host=http://krameriusFedora:8080/'
     volumes:
       - '/docker-compose/kramerius6-docker/kram6:/opt/app-root/src/.kramerius4'
     ports:
