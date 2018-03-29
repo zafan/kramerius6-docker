@@ -1,4 +1,4 @@
-From tomcat:8.5
+FROM tomcat:8.5
 LABEL maintainer="daniel.secik@mzk.cz"
  
 ENV FEDORA_VERSION 4.7.5
