@@ -14,7 +14,7 @@ Download source-to-image (s2i) binary
 [here](https://github.com/openshift/source-to-image/releases) and unzip it.
 
 ```
-# /path/to/s2i --ref=fcrepo4 --exclude="" https://github.com/ceskaexpedice/kramerius.git \ 
+# /path/to/s2i build --ref=fcrepo4 --exclude="" https://github.com/ceskaexpedice/kramerius.git \ 
 kramerius6-builder kramerius6
 ```
 When build is done create in *kramerius6-docker* directory **kram6** and setup permissions.
