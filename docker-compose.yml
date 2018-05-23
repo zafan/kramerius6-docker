@@ -2,9 +2,12 @@ version: '2'
 services:
   solr:
     image: solr:7.2.0-alpine
+          #    image: solr-test
     environment:
       - TZ=Europe/Prague
       - VIRTUAL_HOST=test2.mzk.cz
+      - "JAVA_OPTS=-Ddisable.configEdit=true"
+      - "CATALINA_OPTS=-Ddisable.configEdit=true"
     volumes:
       - '/docker-compose/kramerius6-docker/solr/kramerius:/kramerius'
       - '/docker-compose/kramerius6-docker/solr/processing:/processing'
