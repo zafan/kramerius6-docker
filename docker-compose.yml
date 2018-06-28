@@ -2,16 +2,15 @@ version: '2'
 services:
   solr:
     image: solr:7.2.0-alpine
-          #    image: solr-test
     environment:
-      - TZ=Europe/Prague
+      - "TZ=Europe/Prague"
       - VIRTUAL_HOST=test2.mzk.cz
       - "JAVA_OPTS=-Ddisable.configEdit=true"
       - "CATALINA_OPTS=-Ddisable.configEdit=true"
     volumes:
-      - '/docker-compose/kramerius6-docker/solr/kramerius:/kramerius'
-      - '/docker-compose/kramerius6-docker/solr/processing:/processing'
-      - '/docker-compose/kramerius6-docker/solr/precreate-kramerius.sh:/docker-entrypoint-initdb.d/precreate-kramerius.sh'
+      - '/data/solr/kramerius:/kramerius'
+      - '/data/solr/processing:/processing'
+      - '/data/solr/precreate-kramerius.sh:/docker-entrypoint-initdb.d/precreate-kramerius.sh'
     ports:
       - 8983:8983
     networks:
@@ -31,6 +30,8 @@ services:
       - TZ=Europe/Prague
     ports:
       - '8080:8080'
+    volumes:
+      - /data/fedora:/fcrepo4-data
     networks:
       default:
         aliases:
@@ -62,7 +63,7 @@ services:
       - 'fedora.topLevelModels=monograph,periodical,soundrecording,manuscript,map,sheetmusic,graphic'
       - 'fedora4Host=http://krameriusFedora:8080/fedora'
     volumes:
-      - '/docker-compose/kramerius6-docker/kram6:/opt/app-root/src/.kramerius4'
+      - '/data/kramerius6:/opt/app-root/src/.kramerius4'
     ports:
       - '9090:8080'
     networks:
@@ -82,6 +83,8 @@ services:
       - POSTGRES_USER=fedoraAdmin
       - POSTGRES_PASSWORD=fedoraAdmin
       - POSTGRES_DB=kramerius4
+    volumes:
+      - /data/krameriusPostres:/var/lib/postgresql/data
     networks:
       default:
         aliases:
