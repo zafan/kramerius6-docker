@@ -26,6 +26,8 @@ For testing purpose 777.
 # chmod 777 kram6
 ```
 
+External network `ud_bridge` must be defined. Use `docker network create ud_bridge` to create it.
+
 #### Notes
 
 ---
