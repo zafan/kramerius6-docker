@@ -43,7 +43,7 @@ services:
         max-file: '1'
     restart: always
   kramerius:
-    image: kramerius6
+    image: moravianlibrary/kramerius6
     environment:
       - TZ=Europe/Prague
       - 'fedoraHost=http://krameriusFedora:8080/fcrepo'
