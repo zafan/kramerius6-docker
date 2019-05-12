@@ -1,5 +1,7 @@
 # Kramerius6-docker
 
+Repository is currently inactive because there are major changes in Kramerius 6 ecosystem which are not implemented yet.
+
 Testing repo for Kramerius 6 with fedora 4 repository.
 
 ## How to build
